@@ -1,4 +1,5 @@
 # functions for SDO
+import json
 
 
 def list_blocked(elements):
@@ -26,12 +27,12 @@ def test_elements_on_block(blocked_elements, access_elements):
         for elements_blocked in range(len(blocked_elements)):
             if elements_access == elements_blocked:
                 list_elements_new.append(elements_blocked)
-    return max(list_elements_new)
+    return max(list_elements_new) if list_elements_new else None
 
 
 def path_to_save_file(filename, path, quest):
     with open(path + '\\' + filename, 'w', encoding='utf-8') as question:
-        question.write(quest + '\n')
+        question.write(quest)
 
 
 def read_file(path, filename):
@@ -43,15 +44,8 @@ def clear_file(path, filename):
     open(path + '\\' + filename, 'w').close()
 
 
-def response_true(element, resp_text):
-    resp_text.replace('\n', '').replace(',', '').replace('.', '') \
-        .replace('–', '').replace('(', '').replace(')', '').replace('«', '').replace('»', '').replace(':', '') \
-        .replace(';', '')
-
-    print(element)
-    print('Ответ: ' + resp_text)
-
-    return element.index(resp_text)
+def validation_answer(answer):
+    return answer.lower()
 
 
 def last_page_task(pages):
@@ -67,25 +61,60 @@ def last_page_task(pages):
             return int(list_pages[-1])
 
 
-def read_exceptions_response(questions):
-    list_exceptions_questions = {
-        'На какую высоту необходимо произвести подъем груза после зацепки, чтобы убедиться в надежности зацепки'
-        'и дальнейшего подъема и перемещение груза?': 'На высоту 200-300 мм',
-        'Работа крана должна вестись под руководством:': 'Дорожного мастера или бригадира пути, назначенного приказом '
-                                                         'по предприятию ответственным за безопасное производство '
-                                                         'работ кранами',
-        'Передвижение дрезин с грузом на крюке крана разрешается при скорости?': 'не более 5 км/ч',
-    }
+def json_load(filename):
+    with open(filename, 'r', encoding='utf-8') as f:
+        exceptions = json.load(f)
+        return exceptions
 
-    for k, v in list_exceptions_questions.items():
-        if k == questions:
-            return v.replace(',', '').lower().replace('\n', '') \
-                .replace(',', '').replace('.', '').replace('–', '').replace('(', '') \
-                .replace(')', '').replace('«', '').replace('»', '').replace(':', '') \
-                .replace(';', '')
 
-    ans = read_file('D:\\Code\\sdo.rzd', 'correct_ans.txt')
-    return ans.replace(',', '').lower().replace('\n', '') \
-        .replace(',', '').replace('.', '').replace('–', '').replace('(', '') \
-        .replace(')', '').replace('«', '').replace('»', '').replace(':', '') \
-        .replace(';', '')
+def json_save(list_except, filename):
+    with open(filename, 'w', encoding='utf-8') as j:
+        json.dump(list_except, j, ensure_ascii=False)
+
+
+def answer_out(question):
+    list_questions = json_load('data.json')
+
+    list_words_question = question.split(' ')
+
+    first_words_questions = list_words_question[0] + ' ' + list_words_question[1] + ' ' + list_words_question[2]
+    last_words_questions = list_words_question[-1] + ' ' + list_words_question[-2] + ' ' + list_words_question[-3]
+
+    answer_true = []
+
+    for u in list_questions:
+        list_words_answer = u.split(' ')
+        first_words_answer = list_words_answer[0] + ' ' + list_words_answer[1] + ' ' + list_words_question[2]
+        if first_words_questions == first_words_answer:
+            answer_true.append(list_questions[u])
+        elif first_words_questions == first_words_answer:
+            answer_true.append(validation_answer(list_questions[u]))
+        elif first_words_questions != first_words_answer:
+            last_words_answer = list_words_answer[-1] + ' ' + list_words_answer[-2] + ' ' + list_words_question[-3]
+            if last_words_questions == last_words_answer:
+                answer_true.append(list_questions[u])
+            elif last_words_questions == last_words_answer:
+                answer_true.append(validation_answer(list_questions[u]))
+        else:
+            return 'Error: ошибка при первом сравнении слов'
+    return answer_true[0]
+
+
+def response_true(element, resp_text, question):
+    # переопределение resp_test в нижний регистр
+    resp_text = resp_text.lower()
+
+    # Создаём список для element's в нижнем регистре
+    elements_lower = []
+
+    # проходим по каждому элементу и делаем ему нижний регистр
+    for j in range(len(element)):
+        elements_lower.append(element[j].lower())
+
+    # проходим по каждому элементу и сравневаем их с ответом
+    for k in range(len(elements_lower)):
+        if elements_lower[k] == resp_text:
+            return elements_lower.index(resp_text)
+        elif elements_lower[k] != resp_text:
+            answers = answer_out(question)
+            return elements_lower.index(answers[0].lower())

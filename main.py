@@ -22,8 +22,8 @@ def main():
     xpath_password = '/html/body/div/div[1]/div/div/div/div[2]/form/table[1]/tbody/tr[2]/td[2]/div/input'
     xpath_button = '/html/body/div/div[1]/div/div/div/div[2]/form/button'
 
-    login = 'PavGrebens'
-    password = 'GhQG6a4l'
+    login = 'AleBelkin13'
+    password = 'J3R974fV'
 
     # Login In
     login_user = login  # input('Введите логин: ')
@@ -72,14 +72,20 @@ def main():
     section = browser.find_elements_by_class_name(class_elements_run)
 
     # click on section
-    section[first_element].click()
+    if section:
+        section[first_element].click()
+    else:
+        browser.close()
 
     # pause 5 seconds
     time.sleep(5)
 
     class_button_task = 'mira-button'
     last_task_button = browser.find_elements_by_class_name(class_button_task)
-    last_task_button[-1].click()
+    if last_task_button:
+        last_task_button[-1].click()
+    else:
+        browser.close()
 
     # pause 5 seconds
     time.sleep(15)
@@ -104,12 +110,6 @@ def main():
                 break
 
         while True:
-            # work with iframe in new window
-            # xpath_span_text = '/html/body/div[1]/div/div[3]/div[1]/div[2]/div[1]/div/div[25]' \
-            #                  '/div/div[2]/div/div/div[3]/div/div[1]/div/div[1]/p/span'
-            # xpath_span_one = '/html/body/div[1]/div/div[3]/div[1]/div[2]/div[1]/div/div[24]/div/' \
-            #                 'div[2]/div/div/div[3]/div/div[1]/div/div[1]/p/span'
-
             span_question = browser.find_elements_by_tag_name('span')
 
             save_text = str(span_question[0].text)
@@ -134,9 +134,6 @@ def main():
             # Index of the correct response input
             index = functions.response_true(list_elements_answers, response_text, save_text)
 
-            # elements_check_inputs = browser.find_elements_by_class_name('fill')
-            # elements_check_inputs.pop(0)
-
             if type(index) == int:
                 elements_check_inputs = browser.find_elements_by_class_name('fill')
                 elements_check_inputs.pop(0)
@@ -147,13 +144,9 @@ def main():
             elif type(index) == tuple:
                 # click of input
                 elements_check_inputs = browser.find_elements_by_class_name('check_bg')
-                #elements_check_inputs.pop(0)
+
                 index_first = index[0]
                 index_two = index[1]
-
-                print(index_first)
-                print(index_two)
-                print(elements_check_inputs)
 
                 elements_check_inputs[index_first].click()
                 time.sleep(2)

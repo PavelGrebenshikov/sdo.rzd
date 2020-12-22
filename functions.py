@@ -75,43 +75,13 @@ def json_save(list_except, filename):
 def answer_out(question):
     list_questions = json_load('data.json')
 
+    # переопределение / убераем в конце строки пробелы
+    question = question.rstrip()
+
     if list_questions[question]:
         return list_questions[question]
     else:
         return list_questions[question.capitalize()]
-
-    # print(question)
-    #
-    # list_words_question = question.split(' ')
-    #
-    # first_words_questions = list_words_question[0] + ' ' + list_words_question[1] + ' ' + list_words_question[2]
-    # last_words_questions = list_words_question[-1] + ' ' + list_words_question[-2] + ' ' + list_words_question[-3]
-    #
-    # answer_true = []
-    #
-    # for u in list_questions:
-    #     list_words_answer = u.split(' ')
-    #     first_words_answer = list_words_answer[0] + ' ' + list_words_answer[1] + ' ' + list_words_question[2]
-    #     if first_words_questions == first_words_answer:
-    #         answer_true.append(list_questions[u])
-    #     elif first_words_questions == first_words_answer:
-    #         answer_true.append(validation_answer(list_questions[u]))
-    #     elif first_words_questions != first_words_answer:
-    #         last_words_answer = list_words_answer[-1] + ' ' + list_words_answer[-2] + ' ' + list_words_question[-3]
-    #         if last_words_questions == last_words_answer:
-    #             answer_true.append(list_questions[u])
-    #         elif last_words_questions == last_words_answer:
-    #             answer_true.append(validation_answer(list_questions[u]))
-    #     else:
-    #         return 'Error: ошибка при первом сравнении слов'
-    # return answer_true[0]
-
-
-# array_answers = ['Python', 'C++', 'Perl', 'Ruby', 'оба варианта верны']
-# response = 'Оба варианта верны'
-# question = 'К чему может привести нарушение нормальной величины зазоров и взаимного расположения стыков?'
-
-# print(answer_out(question))
 
 
 def response_true(element, resp_text, question):
@@ -131,23 +101,10 @@ def response_true(element, resp_text, question):
         return elements_lower.index(resp_text)
     else:
         answers = answer_out(question)
-        if len(answers) == 1:
+        print('LONG ANSWERS')
+        print(len(answers[0]))
+        if type(answers) == str:
+            return elements_lower.index(answers)
+        else:
             answer_list = [elements_lower.index(answers[0]), elements_lower.index(answers[1])]
             return answer_list
-        elif len(answers) == 0:
-            return elements_lower.index(answers[0])
-        else:
-            first_index = elements_lower.index(answers[0])
-            two_index = elements_lower.index(answers[1])
-            return first_index, two_index
-
-    # for k in range(len(elements_lower)):
-    #     if elements_lower[k] == resp_text:
-    #         return elements_lower.index(resp_text)
-    #     elif elements_lower[k] != resp_text:
-    #         answers = answer_out(question)
-    #         if len(answers) == 1:
-    #             answer_list = [elements_lower.index(answers[0].lower()), elements_lower.index(answers[1].lower())]
-    #             return answer_list
-    #         else:
-    #             return elements_lower.index(answers[0].lower())

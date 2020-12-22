@@ -1,5 +1,5 @@
 from selenium import webdriver
-from functions import read_file, path_to_save_file
+from functions import read_file, path_to_save_file, json_save
 from time import sleep
 
 
@@ -27,7 +27,7 @@ def main_answer():
     sleep(3)
     answer = browser.find_elements_by_class_name('sdo')
 
-    answer[1].click()
+    answer[0].click()
 
     sleep(3)
     correct_ans = browser.find_element_by_class_name('select').text

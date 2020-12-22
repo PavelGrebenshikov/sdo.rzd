@@ -22,8 +22,8 @@ def main():
     xpath_password = '/html/body/div/div[1]/div/div/div/div[2]/form/table[1]/tbody/tr[2]/td[2]/div/input'
     xpath_button = '/html/body/div/div[1]/div/div/div/div[2]/form/button'
 
-    login = ''
-    password = ''
+    login = 'PavGrebens'
+    password = 'GhQG6a4l'
 
     # Login In
     login_user = login  # input('Введите логин: ')
@@ -123,27 +123,41 @@ def main():
             # Up code answers future
             response_text = functions.read_file('D:\\Code\\sdo.rzd', 'correct_answer.txt')
 
-            # call function exceptions
-            response_text = functions.read_exceptions_response(questions=save_text)
-
             # answers to sdo.rzd
             elements_answers = browser.find_elements_by_tag_name('span')
 
             list_elements_answers = []
             for el_ans in elements_answers:
-                list_elements_answers.append(str(el_ans.text).replace(',', '').lower().replace('\n', '')\
-                                             .replace(',', '').replace('.', '').replace('–', '').replace('(', '')\
-                                             .replace(')', '').replace('«', '').replace('»', '').replace(':', '')\
-                                             .replace(';', ''))
+                list_elements_answers.append(str(el_ans.text))
             list_elements_answers.pop(0)
 
             # Index of the correct response input
-            index = functions.response_true(list_elements_answers, response_text.lower())
+            index = functions.response_true(list_elements_answers, response_text, save_text)
 
-            # click of input
-            elements_check_inputs = browser.find_elements_by_class_name('fill')
-            elements_check_inputs.pop(0)
-            elements_check_inputs[index].click()
+            # elements_check_inputs = browser.find_elements_by_class_name('fill')
+            # elements_check_inputs.pop(0)
+
+            if type(index) == int:
+                elements_check_inputs = browser.find_elements_by_class_name('fill')
+                elements_check_inputs.pop(0)
+
+                print(elements_check_inputs)
+
+                elements_check_inputs[index].click()
+            elif type(index) == tuple:
+                # click of input
+                elements_check_inputs = browser.find_elements_by_class_name('check_bg')
+                #elements_check_inputs.pop(0)
+                index_first = index[0]
+                index_two = index[1]
+
+                print(index_first)
+                print(index_two)
+                print(elements_check_inputs)
+
+                elements_check_inputs[index_first].click()
+                time.sleep(2)
+                elements_check_inputs[index_two].click()
 
             answer_page = browser.find_elements_by_class_name('show_slides')
             text_answer_page = answer_page[1].text

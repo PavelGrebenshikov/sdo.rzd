@@ -23,7 +23,7 @@ def main():
     xpath_button = '/html/body/div/div[1]/div/div/div/div[2]/form/button'
 
     login = 'AleBelkin13'
-    password = 'J3R974fV'
+    password = 'JsR974fV'
 
     # Login In
     login_user = login  # input('Введите логин: ')
@@ -60,22 +60,40 @@ def main():
     class_block = 'mira-grid-cell-image'
     numbers = browser.find_elements_by_class_name(class_tasks)
     blocked_task = browser.find_elements_by_class_name(class_block)
+    
+    if blocked_task:
+        # functions from module 'functions.py'
+        true_begin_element = functions.test_elements_on_block(numbers, blocked_task)
+        first_element = true_begin_element + 1
 
-    # functions from module 'functions.py'
-    begin_element = functions.test_elements_on_block(numbers, blocked_task)
-    first_element = begin_element + 1
+        class_elements_run = 'mira-grid-cell-operation'
 
-    class_elements_run = 'mira-grid-cell-operation'
+        # pause 5 seconds for load page
+        time.sleep(10)
+        section = browser.find_elements_by_class_name(class_elements_run)
 
-    # pause 5 seconds for load page
-    time.sleep(10)
-    section = browser.find_elements_by_class_name(class_elements_run)
+        # click on section
+        if section:
+            section[first_element].click()
+        else:
+            browser.close()
 
-    # click on section
-    if section:
-        section[first_element].click()
     else:
-        browser.close()
+        # functions from module 'functions.py'
+        begin_element = functions.test_elements_on_block(numbers, blocked_task)
+        first_element = begin_element
+
+        class_elements_run = 'mira-grid-cell-operation'
+
+        # pause 5 seconds for load page
+        time.sleep(10)
+        section = browser.find_elements_by_class_name(class_elements_run)
+
+        # click on section
+        if section:
+            section[first_element].click()
+        else:
+            browser.close()
 
     # pause 5 seconds
     time.sleep(5)
@@ -189,6 +207,8 @@ def main():
     # function for determining the response
     functions.clear_file('D:\\Code\\PassageSDO', 'correct_answer.txt')
     functions.clear_file('D:\\Code\\PassageSDO', 'question.txt')
+
+    browser.close()
 
     main()
 

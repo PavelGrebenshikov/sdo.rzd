@@ -27,7 +27,7 @@ def test_elements_on_block(blocked_elements, access_elements):
         for elements_blocked in range(len(blocked_elements)):
             if elements_access == elements_blocked:
                 list_elements_new.append(elements_blocked)
-    return max(list_elements_new) if list_elements_new else None
+    return max(list_elements_new) if list_elements_new else 0
 
 
 def path_to_save_file(filename, path, quest):
@@ -101,8 +101,6 @@ def response_true(element, resp_text, question):
         return elements_lower.index(resp_text)
     else:
         answers = answer_out(question)
-        print('LONG ANSWERS')
-        print(len(answers[0]))
         if type(answers) == str:
             return elements_lower.index(answers)
         else:

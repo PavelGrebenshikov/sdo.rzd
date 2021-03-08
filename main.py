@@ -22,8 +22,8 @@ def main():
     xpath_password = '/html/body/div/div[1]/div/div/div/div[2]/form/table[1]/tbody/tr[2]/td[2]/div/input'
     xpath_button = '/html/body/div/div[1]/div/div/div/div[2]/form/button'
 
-    login = 'AleBelkin13'
-    password = 'JsR974fV'
+    login = ''
+    password = ''
 
     # Login In
     login_user = login  # input('Введите логин: ')
